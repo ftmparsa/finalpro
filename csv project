@@ -1,0 +1,40 @@
+import csv
+
+# Function to read information from a CSV file and import it into a list
+def read_csv_file(filename):
+    data = []
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row if it exists
+        for row in reader:
+            data.append(row)
+    return data
+
+# Function to add 9% tax to each price and calculate the total price
+def calculate_total_price(data):
+    total_price = 0
+    for row in data:
+        price = float(row[1])  # Assuming the price is in the second column
+        price_with_tax = price * 1.09
+        total_price += price_with_tax
+    return total_price
+
+# Function to create a new CSV file and write the total price in a column
+def write_total_price_to_csv(data, output_filename):
+    with open(output_filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Total Price'])  # Write the header
+        total_price = calculate_total_price(data)
+        writer.writerow([total_price])  # Write the total price
+
+def main():
+    input_filename = 'input.csv'  # Replace with your input CSV file
+    output_filename = 'output.csv'  # Replace with your desired output CSV file
+    data = read_csv_file(input_filename)
+    total_price = calculate_total_price(data)
+    print(f'Total Price: ${total_price:.2f}')
+    write_total_price_to_csv(data, output_filename)
+    print(f'Total Price written to {output_filename}.')
+
+if __name__ == "__main__":
+    main()
